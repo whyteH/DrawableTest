@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--XQuickClearLayout用到的属性-->
+    <declare-styleable name="QuickClearAndPwdLayout">
+        <!--是否允许使用快速清除功能-->
+        <attr name="ShowQuickClear" format="boolean" />
+        <!--清除按钮图标-->
+        <attr name="QuickClearIcon" format="reference" />
+        <attr name="ShowPwd" format="boolean" />
+        <attr name="PwdVisibleIcon" format="reference" />
+        <attr name="PwdHideIcon" format="reference" />
+    </declare-styleable>
+
+    <!--XMultiSizeEditText用到的属性-->
+    <declare-styleable name="XMultiSizeEditText">
+        <attr name="xHintTextSize" format="dimension" />
+        <attr name="xInputTextSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PrefixedEditText">
+        <attr name="prefixTextSize" format="dimension" />
+        <attr name="prefixTextColor" format="color" />
+    </declare-styleable>
+
+</resources>

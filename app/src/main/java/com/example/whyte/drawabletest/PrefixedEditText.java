@@ -1,7 +1,6 @@
 package com.example.whyte.drawabletest;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -190,50 +189,49 @@ public class PrefixedEditText extends XMultiSizeEditText {
     private class TextDrawable extends Drawable {
         private Drawable mDrawable;
         private String mText = "";
-        Paint mPaint;
+        private Paint mTextPaint;
+        private Paint mLinePaint;
+        private final int mTextWidth;
 
         public TextDrawable(Drawable drawable, String text) {
+            mTextPaint = new Paint(getPaint());
+            mTextPaint.setTextSize(getPrefixTextSize());
 
-            mPaint = new Paint(getPaint());
-            mPaint.setTextSize(getPrefixTextSize());
+            mLinePaint = new Paint(getPaint());
+            mLinePaint.setColor(Color.parseColor("#eeeeee"));
+            mLinePaint.setStrokeWidth(2);
 
             mDrawable = drawable;
             mText = text;
+            mTextWidth = (int) (mTextPaint.measureText(mText) + 10);
+            int textHeight = (int) mTextPaint.getTextSize();
 
-            int textWidth = (int) mPaint.measureText(mText);
-            int textHeight = (int) mPaint.getTextSize();
+            int lineWidth = (int) mLinePaint.getStrokeWidth() + 10;
             if (mDrawable == null) {
-                setBounds(0, 0, textWidth, textHeight);
+                setBounds(0, 0, mTextWidth, textHeight);
             } else {
-                setBounds(0, 0, textWidth + mDrawable.getIntrinsicWidth() + 10, Math.min(mDrawable.getIntrinsicHeight(), textHeight));
+                setBounds(0, 0, mDrawable.getIntrinsicWidth() + mTextWidth + lineWidth, Math.min(mDrawable.getIntrinsicHeight(), textHeight));
             }
         }
 
         @Override
         public void draw(Canvas canvas) {
-
             int lineBaseline = getLineBounds(0, null);
-
-            mPaint.setColor(mPrefixTextColor);
-            mPaint.setTextSize(getPrefixTextSize());
-
+            mTextPaint.setColor(mPrefixTextColor);
+            mTextPaint.setTextSize(getPrefixTextSize());
             int start = 0;
             if (mDrawable != null) {
                 Rect bounds = getBounds();
-                start = mDrawable.getBounds().width();
-                start += getCompoundDrawablePadding();
                 mDrawable.setBounds(bounds.left, bounds.top, mDrawable.getIntrinsicWidth(), bounds.bottom);
                 mDrawable.draw(canvas);
+
+                start = mDrawable.getBounds().right;
+                start += getCompoundDrawablePadding();
             }
 
-
-            canvas.drawText(mText, start, canvas.getClipBounds().top + lineBaseline, mPaint);
-
-            Paint linePaint = new Paint(getPaint());
-            linePaint.setColor(Color.BLACK);
-            linePaint.setStrokeWidth(10);
-            int mStart = getBounds().right;
-            canvas.drawLine(mStart, getBounds().top, mStart, getBounds().bottom, linePaint);
+            canvas.drawText(mText, start, canvas.getClipBounds().top + lineBaseline, mTextPaint);
+            start += mTextWidth;
+            canvas.drawLine(start, getBounds().top, start, getBounds().bottom, mLinePaint);
         }
 
         @Override
@@ -244,7 +242,7 @@ public class PrefixedEditText extends XMultiSizeEditText {
 
         @Override
         public int getOpacity() {
-            return PixelFormat.RGBA_8888;
+            return PixelFormat.TRANSLUCENT;
         }
     }
 

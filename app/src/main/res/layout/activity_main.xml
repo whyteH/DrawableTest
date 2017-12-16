@@ -45,8 +45,21 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:drawableLeft="@mipmap/login_input_user"
-            android:drawableStart="@mipmap/login_input_user" />
+            android:drawableStart="@mipmap/login_input_user"
+            android:textSize="18sp" />
     </LinearLayout>
+
+    <com.example.whyte.drawabletest.lrc.LrcView
+        android:id="@+id/lrc_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        app:lrc_current_text_color="@android:color/black"
+        app:lrc_divider_height="24dp"
+        app:lrc_inter_divider_height="8dp"
+        app:lrc_normal_text_color="#999"
+        app:lrc_text_size="18dp" />
 
 
 </LinearLayout>

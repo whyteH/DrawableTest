@@ -1,6 +1,7 @@
 package com.example.whyte.drawabletest;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -25,7 +26,7 @@ public class PrefixedEditText extends XMultiSizeEditText {
     private Drawable mCompoundDrawableLeft, mCompoundDrawableTop,
             mCompoundDrawableRight, mCompoundDrawableBottom;
 
-    private int mPrefixTextColor;
+    private ColorStateList mPrefixTextColor;
     private float mPrefixTextSize;
 
     private String mPrefix;
@@ -41,7 +42,7 @@ public class PrefixedEditText extends XMultiSizeEditText {
 
     public PrefixedEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-//        mPrefixTextColor = getTextColors();
+        mPrefixTextColor = getTextColors();
         mPrefixTextSize = getTextSize();
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.PrefixedEditText, defStyle, 0);
@@ -134,12 +135,12 @@ public class PrefixedEditText extends XMultiSizeEditText {
     }
 
     public void setPrefixTextColor(int color) {
-        mPrefixTextColor = color;
+        mPrefixTextColor = ColorStateList.valueOf(color);
     }
 
-//    public void setPrefixTextColor(ColorStateList color) {
-//        mPrefixTextColor = color;
-//    }
+    public void setPrefixTextColor(ColorStateList color) {
+        mPrefixTextColor = color;
+    }
 
     public void setPrefixTextSize(float prefixTextSize) {
         mPrefixTextSize = prefixTextSize;
@@ -195,18 +196,19 @@ public class PrefixedEditText extends XMultiSizeEditText {
 
         public TextDrawable(Drawable drawable, String text) {
             mTextPaint = new Paint(getPaint());
-            mTextPaint.setTextSize(getPrefixTextSize());
+            mTextPaint.setTextSize(getTextSize());
+            mTextPaint.setColor(mPrefixTextColor.getColorForState(getDrawableState(), 0));
 
             mLinePaint = new Paint(getPaint());
-            mLinePaint.setColor(Color.parseColor("#eeeeee"));
+            mLinePaint.setColor(Color.parseColor("#FFEAEAEA"));
             mLinePaint.setStrokeWidth(2);
 
             mDrawable = drawable;
             mText = text;
-            mTextWidth = (int) (mTextPaint.measureText(mText) + 10);
+            mTextWidth = (int) (mTextPaint.measureText(mText) + DensityUtil.dp2px(getContext(), 8));
             int textHeight = (int) mTextPaint.getTextSize();
 
-            int lineWidth = (int) mLinePaint.getStrokeWidth() + 10;
+            int lineWidth = (int) mLinePaint.getStrokeWidth() + DensityUtil.dp2px(getContext(), 10);
             if (mDrawable == null) {
                 setBounds(0, 0, mTextWidth, textHeight);
             } else {
@@ -217,8 +219,6 @@ public class PrefixedEditText extends XMultiSizeEditText {
         @Override
         public void draw(Canvas canvas) {
             int lineBaseline = getLineBounds(0, null);
-            mTextPaint.setColor(mPrefixTextColor);
-            mTextPaint.setTextSize(getPrefixTextSize());
             int start = 0;
             if (mDrawable != null) {
                 Rect bounds = getBounds();
@@ -231,7 +231,7 @@ public class PrefixedEditText extends XMultiSizeEditText {
 
             canvas.drawText(mText, start, canvas.getClipBounds().top + lineBaseline, mTextPaint);
             start += mTextWidth;
-            canvas.drawLine(start, getBounds().top, start, getBounds().bottom, mLinePaint);
+            canvas.drawLine(start, getBounds().top - DensityUtil.dp2px(getContext(), 1), start, getBounds().bottom + DensityUtil.dp2px(getContext(), 2), mLinePaint);
         }
 
         @Override

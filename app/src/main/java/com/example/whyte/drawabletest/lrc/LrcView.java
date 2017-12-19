@@ -76,6 +76,12 @@ public class LrcView extends View {
      */
     private boolean mNeedInitLrc = true;
 
+
+    /**
+     * 歌词的总高度
+     */
+    private float lrcHeight;
+
     private List<String> mTempList = new ArrayList<>();
 
     private GestureDetectorCompat mGestureDetector;
@@ -395,6 +401,8 @@ public class LrcView extends View {
         }
         mNeedInitLrc = false;
 
+        lrcHeight = baseY;
+
         print("initLrcInternal 耗时：" + (System.currentTimeMillis() - start));
 
         postInvalidate();
@@ -651,7 +659,7 @@ public class LrcView extends View {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             mGestureScrolling = true;
             if (mScrollFirst) {
-                print("mScrollFirst onScroll :" + distanceY + " " + mTouchSlop);
+                print("mScrollFirst onScroll :" + distanceY + "----" + mTouchSlop);
                 mScrollFirst = false;
                 if (distanceY > 0) { // 向上
                     if (distanceY > mTouchSlop) {
@@ -663,8 +671,12 @@ public class LrcView extends View {
                     }
                 }
             }
+            print("mScrolling onScroll :" + distanceY + "----" + mTouchSlop);
             mScrollDistance += -distanceY;
-//            print("mScrollDistance:" + mScrollDistance);
+            print("mScrollDistance:" + mScrollDistance);
+            if (mScrollDistance > 0 || lrcHeight < Math.abs(mScrollDistance)) {
+                return false;
+            }
             invalidate();
             return true;
         }

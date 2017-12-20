@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         LrcView lrcView = (LrcView) findViewById(R.id.lrc_view);
 
         lrcView.setLrc("\n" +
@@ -104,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 "[03:42.06]让我们取名叫做珍惜\n" +
                 "\n" +
                 "[03:48.66]让我们懂得学会珍惜\n");
+
+        lrcView.update(98274);
 
     }
 }
